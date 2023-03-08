@@ -5,7 +5,7 @@ provider "aws" {
 
 # Resource Block
 resource "aws_instance" "ec2demo" {
-    ami             = "ami-030e520ec063f6467"
+    ami             = "ami-030e520ec063f6467" # Ubuntu 18.04
     instance_type   = "t2.micro"
     tags = {
       "Name" = "ec2demo"
