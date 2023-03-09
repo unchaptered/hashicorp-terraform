@@ -1,7 +1,7 @@
 # Terraform Block
 terraform {
   
-  required_version = "~> 0.14"
+  required_version = "~> 1.3"
     # "~> 0.14.8"
         # Allow 0.14.9 ~ 0.14.10 etc on
         # Deny 0.15.
@@ -15,7 +15,7 @@ terraform {
         aws = {
             source = "hashicorp/aws"
             # [<HOSTNAME>/]<NAMESPACE>/<TYPE>
-            version = "~> 3.0"
+            version = "~> 4.5"
             # "~> 3.0"
                 # Alow 3.xx
                 # Deny 4.xx
