@@ -1,9 +1,17 @@
 # Resource Block : EC2 Instance
 resource "aws_instance" "ec2demo" {
-    ami             =   "ami-030e520ec063f6467"   # Ubuntu 18.04
-    instance_type   =   "t2.micro"
+
+    ami             =   data.aws_ami.amzlinux2
+
+    instance_type   =   var.instance_type
+    key_name        =   var.instance_key_pair
+    vpc_security_group_ids = [ 
+      aws_security_group.vpc-ssh.id,
+      aws_security_group.vpc-web.id      
+    ]
 
     user_data = file("${path.module}/app1-install.sh")
+    
     tags = {
       "Name" = "ec2demo"
       
@@ -17,4 +25,5 @@ resource "aws_instance" "ec2demo" {
 
       "manager": "unchaptered"
     }
+
 }

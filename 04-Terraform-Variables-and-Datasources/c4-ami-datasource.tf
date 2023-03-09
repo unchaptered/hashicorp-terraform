@@ -1,12 +1,11 @@
 data "aws_ami" "amzlinux2" {
 
     most_recent     = true
-    name_regex      = "^myami-\\d{3}"
-    owners          =  ["self"]
+    owners          =  ["amazon"]
 
     filter {
         name    = "name"
-        values  = ["myami-*"]
+        values  = ["amzn2-ami-hvm-*-gp2"]
     }
 
     filter {
@@ -18,4 +17,10 @@ data "aws_ami" "amzlinux2" {
         name    = "virtualization-type"
         values  = ["hvm"]
     }
+
+    filter {
+        name    = "architecture"
+        values  = ["x86_64"]
+    }
+    
 }
