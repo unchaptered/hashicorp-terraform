@@ -2,12 +2,12 @@
 
 output "instance_public_ip" {
     description = "EC2 Instance Public IP"
-    value       = aws_instance.ec2demo.public_ip
+    value       = aws_instance.ec2demo[*].public_ip
 }
 
 output "instance_public_dns" {
     description = "EC2 Instance Public IP"
-    value       = aws_instance.ec2demo.public_dns
+    value       = aws_instance.ec2demo[*].public_dns
 }
 
 # For Loop를 사용한 list 생성
@@ -29,7 +29,7 @@ output "for_output_map" {
 output "for_output_map_2" {
     description = "For Loop with List"
     value       = {
-        for count, instance in aws_instance.ec2demo: c => instance.public_dns
+        for count, instance in aws_instance.ec2demo: count => instance.public_dns
     }
 }
 
