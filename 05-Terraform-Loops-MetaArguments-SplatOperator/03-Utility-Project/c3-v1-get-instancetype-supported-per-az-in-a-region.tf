@@ -19,5 +19,10 @@ data "aws_ec2_instance_type_offerings" "my_ins_type1" {
 # Output Value Block
 
 output "output_v1_1" {
-    value   = data.aws_ec2_instance_type_offerings.my_ins_type1.instance_type
+    value   = data.aws_ec2_instance_type_offerings.my_ins_type1.instance_types
 }
+
+# Outputs:
+#
+# output_v1_1 = tolist([])
+# (base) PS C:\AAA\terrafo
