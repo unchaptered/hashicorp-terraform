@@ -1,7 +1,7 @@
 # Input Value Block
 
 variable "aws_region" {
-    descdescription = "Region in which AWS Resources to be created"  
+    description = "Region in which AWS Resources to be created"  
     type            = string
     default         = "ap-northeast-2"
 }

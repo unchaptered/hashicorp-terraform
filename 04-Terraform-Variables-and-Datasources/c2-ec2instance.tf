@@ -1,7 +1,7 @@
 # Resource Block : EC2 Instance
 resource "aws_instance" "ec2demo" {
 
-    ami             =   data.aws_ami.amzlinux2
+    ami             =   data.aws_ami.amzlinux2.id
 
     instance_type   =   var.instance_type
     key_name        =   var.instance_key_pair

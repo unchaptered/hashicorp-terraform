@@ -22,6 +22,11 @@
 
 # 보안상의 이유로 업로드 금지 항목
 
+# SECRETS
+
+.pem
+*.pem
+
 # TERRAFORM
 
 .terraform

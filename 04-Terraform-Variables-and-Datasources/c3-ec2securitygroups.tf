@@ -6,11 +6,15 @@ resource "aws_security_group" "vpc-ssh" {
     description = "Dev VPC SSH"
 
     ingress = [ {
+      self = false
+      prefix_list_ids = []
+      security_groups = []
       description = "Allow Port 22"
       from_port = 22
       to_port = 22
       protocol = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = [ "0.0.0.0/0" ]
+      ipv6_cidr_blocks = [ "::/0" ]
     } ]
 
     egress {
@@ -46,18 +50,29 @@ resource "aws_security_group" "vpc-web" {
     description = "Dev VPC Web"
 
     ingress = [ {
+      self = false
+      prefix_list_ids = []
+      security_groups = []
       description = "Allow Port 80"
       from_port = 80
       to_port = 80
       protocol = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }, {
-      description = "Allow Port 443"
-      from_port = 443
-      to_port = 443
-      protocol = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    }]
+      cidr_blocks = [ "0.0.0.0/0" ]
+      ipv6_cidr_blocks = [ "::/0" ]
+    } ]
+    # ingress = [ {
+    #   description = "Allow Port 80"
+    #   from_port = 80
+    #   to_port = 80
+    #   protocol = "tcp"
+    #   cidr_blocks = ["0.0.0.0/0"]
+    # }, {
+    #   description = "Allow Port 443"
+    #   from_port = 443
+    #   to_port = 443
+    #   protocol = "tcp"
+    #   cidr_blocks = ["0.0.0.0/0"]
+    # }]
 
     egress {
       description = "Allow all ip and ports outbound"
@@ -68,7 +83,7 @@ resource "aws_security_group" "vpc-web" {
     }
 
     tags = {
-      "Name" = "ec2demovpc-ssh"
+      "Name" = "ec2demovpc-web"
       
       "resource-level": "vpc"
       "resource-region": "ap-northeast-2"
