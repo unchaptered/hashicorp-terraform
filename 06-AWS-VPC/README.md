@@ -1,0 +1,2 @@
+
+테라폼 모듈(Terraform Module) 중에 [VPC 모듈](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest)을 사용하여 [AWS 3-Tier Architecture](https://unchaptered.notion.site/AWS-VPC-3-Teier-Architecture-e54fa5e1a8a9442a8e755d82c63dcf27)를 구현합니다.
