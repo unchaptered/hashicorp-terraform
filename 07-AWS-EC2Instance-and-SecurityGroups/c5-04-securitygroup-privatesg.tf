@@ -1,6 +1,6 @@
 
 
-module "private_bastion_sg" {
+module "private_sg" {
 
   source    = "terraform-aws-modules/security-group/aws"
   version   = "1.19.0"
