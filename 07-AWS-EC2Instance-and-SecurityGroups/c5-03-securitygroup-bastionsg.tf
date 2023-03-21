@@ -1,22 +1,16 @@
-
-
+# AWS EC2 Security Group Terraform Module
+# Security Group for Public Bastion Host
 module "public_bastion_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "3.18.0"
 
-  source    = "terraform-aws-modules/security-group/aws"
-  version   = "1.19.0"
-
-  # 언더바(_)보다 하이픈(-)이 AWS Management Console에서 더 잘보입니다.
-  name        = "public-bastion-sg"
-  description = "Security Group with SSH port open for everybody(IPv4 CIDR), egress port all world open"
-
-  vpc_id      = module.vpc.vpc_id
-
-  # Ingress Rule & CIDR Block
-  ingress_rules       = ["ssh-tcp"]
+  name = "public-bastion-sg"
+  description = "Security Group with SSH port open for everybody (IPv4 CIDR), egress ports are all world open"
+  vpc_id = module.vpc.vpc_id
+  # Ingress Rules & CIDR Blocks
+  ingress_rules = ["ssh-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
-
-  # Egress Rule - Ingress Rule
-  egress_rules        = ["all-all"]
-  tags                = local.common_tags
-  
+  # Egress Rule - all-all open
+  egress_rules = ["all-all"]
+  tags = local.common_tags
 }

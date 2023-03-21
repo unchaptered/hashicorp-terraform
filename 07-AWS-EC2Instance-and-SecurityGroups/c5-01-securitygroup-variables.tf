@@ -1,3 +1,2 @@
-# AWS EC2 SG(Security Group) Terraform Variables
-## Placeholder file for variables
-
+# AWS EC2 Security Group Terraform Variables
+## Placeholder file for Variables
