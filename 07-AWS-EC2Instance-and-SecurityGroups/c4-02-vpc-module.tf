@@ -7,7 +7,10 @@ module "vpc" {
   # VPC Basic Details
   name = "${local.name}-${var.vpc_name}"
   cidr = var.vpc_cidr_block
-  azs             = var.vpc_availability_zones
+  azs             = toset([
+    for aws_az_name, aws_az_meta in data.aws_ec2_instance_type_offerings.aws_az_valid_list: 
+        aws_az_name if length(aws_az_meta.instance_types) == 1
+  ])
   public_subnets  = var.vpc_public_subnets
   private_subnets = var.vpc_private_subnets  
 

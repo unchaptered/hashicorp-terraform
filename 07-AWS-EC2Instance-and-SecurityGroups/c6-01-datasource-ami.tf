@@ -19,3 +19,36 @@ data "aws_ami" "amzlinux2" {
     values = ["x86_64"]
   }
 }
+
+
+# CUSTOM!
+data "aws_availability_zones" "aws_az_all_list" {
+  
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+
+}
+
+# CUSTOM!
+data "aws_ec2_instance_type_offerings" "aws_az_valid_list" {
+
+    location_type = "availability-zone"
+    for_each = toset(
+        data.aws_availability_zones
+            .aws_az_all_list
+            .names
+    ) 
+
+    filter {
+        name    = "instance-type"
+        values  = [ var.instance_type ]
+    }
+
+    filter {
+        name    = "location"
+        values  = [ each.key ] 
+    }
+
+}
