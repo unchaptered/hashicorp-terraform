@@ -41,3 +41,5 @@ terraform.tf
 
 # OTHERS
 */local-exec-output-files/creation-time-vpc-id.txt
+*/.terraform.tfstate.lock.info
+*/*/.terraform.tfstate.lock.info
