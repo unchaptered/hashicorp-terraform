@@ -38,3 +38,6 @@
 *.tfstate.backup
 
 terraform.tf
+
+# OTHERS
+local-exec-output-files/creation-time-vpc-id.txt
