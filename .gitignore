@@ -40,4 +40,4 @@
 terraform.tf
 
 # OTHERS
-local-exec-output-files/creation-time-vpc-id.txt
+*/local-exec-output-files/creation-time-vpc-id.txt
