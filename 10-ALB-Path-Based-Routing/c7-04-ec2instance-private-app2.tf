@@ -5,14 +5,14 @@
 # https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest
 
 
-module "ec2_private" {
+module "ec2_private_app2" {
 
     depends_on = [ module.vpc ]
 
     source  = "terraform-aws-modules/ec2-instance/aws"
     version = "4.3.0"
 
-    name            = "${var.environment}-vm"
+    name            = "${var.environment}-app2"
     # instance_count  = 2
 
     ami                    = data.aws_ami.amzlinux2.id
