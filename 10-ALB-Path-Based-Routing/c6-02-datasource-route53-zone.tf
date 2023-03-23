@@ -1,6 +1,6 @@
 # Get DNS Information from AWS Route53
 data "aws_route53_zone" "mydomain" {
-    name        = "sample.domain.com"
+    name        = "devopsincloud.com"
 }
 
 # Output MyDomain
