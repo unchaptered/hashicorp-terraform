@@ -1,5 +1,3 @@
-# Terraform AWS Classic Load Balancer (ELB-CLB) Outputs
-
 # Terraform AWS Application Load Balancer (ALB) Outputs
 output "this_lb_id" {
   description = "The ID and ARN of the load balancer we created."

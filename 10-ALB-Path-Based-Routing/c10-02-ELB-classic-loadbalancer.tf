@@ -58,14 +58,22 @@ module "alb" {
             # App1 Target Grouop - Targets
 
             targets = {
-                my_app1_vm1 = {
-                    target_id   = module.ec2_private[0].id
+                my_app1_app1_1 = {
+                    target_id   = module.ec2_private_app1[0].id
                     port        = 80
                 },
-                my_app1_vm2 = {
-                    target_id   = module.ec2_private[1].id
+                my_app1_app1_2 = {
+                    target_id   = module.ec2_private_app1[1].id
                     port        = 80
-                }
+                },
+                my_app1_app2_1 = {
+                    target_id   = module.ec2_private_app2[0].id
+                    port        = 80
+                },
+                my_app1_app2_2 = {
+                    target_id   = module.ec2_private_app2[1].id
+                    port        = 80
+                },
             }
 
             tags = local.common_tags
