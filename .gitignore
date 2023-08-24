@@ -32,9 +32,16 @@
 .terraform
 .terraform.lock.hcl
 .tfstate
-.tfvars
-*.tfvars
 *.tfstate
+02-Terraform-Basics/*?terraform.tfvars
+03-Terraform-Settings-Providers-Resources/*?terraform.tfvars
+04-Terraform-Variables-and-Datasources/*?terraform.tfvars
+05-Terraform-Loops-MetaArguments-SplatOperator/*?terraform.tfvars
+06-AWS-VPC/*?terraform.tfvars
+07-AWS-EC2Instance-and-SecurityGroups/*?terraform.tfvars
+08-AWS-ELB-Classic-LoadBalancer/*?terraform.tfvars
+10-ALB-Path-Based-Routing/*?terraform.tfvars
+
 *.tfstate.backup
 
 terraform.tf
