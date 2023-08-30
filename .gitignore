@@ -43,8 +43,10 @@
 10-ALB-Path-Based-Routing/*?terraform.tfvars
 
 *.tfstate.backup
-
 terraform.tf
+terraform.tfvars
+terraform.tfstate
+crash.log
 
 # OTHERS
 */local-exec-output-files/creation-time-vpc-id.txt
