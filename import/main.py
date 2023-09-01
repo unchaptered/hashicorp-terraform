@@ -6,6 +6,11 @@ import platform
 import subprocess
 
 from typing import Optional, List
+from s3.get_s3_data import getS3List
+from eip.get_eip_data import getEipList
+from elb.get_elb_list import getClbList, getElbList
+from rds.get_rds_list import getRdsList
+from ec2_keypair.get_ec2_keypair_list import getEc2KeyPairList
 
 
 def getWorkPath():
@@ -72,10 +77,31 @@ class ResultWriter():
     ec2: Result
     ebs: Result
 
+    s3: Result
+    ec2_keypair: Result
+    eip: Result
+    clb: Result
+    elb: Result
+    rds: Result
+
     def __init__(self, cvtRegionList: List[str]):
+        # With Terraform
         self.cvtRegionList = cvtRegionList
         self.ec2 = Result(self.cvtRegionList)
         self.ebs = Result(self.cvtRegionList)
+
+        # With AWS CLI
+
+        tmpS3RegionList = self.cvtRegionList.copy()
+        tmpS3RegionList.extend(['null'])
+        self.s3 = Result(tmpS3RegionList)
+
+        self.eip = Result(self.cvtRegionList)
+        self.clb = Result(self.cvtRegionList)
+        self.elb = Result(self.cvtRegionList)
+        self.ec2_keypair = Result(self.cvtRegionList)
+
+        self.rds = Result(self.cvtRegionList)
 
     def saveResult(self):
         data = {}
@@ -85,7 +111,7 @@ class ResultWriter():
             # 제거 금지
             # elif not callable(value) and not attr.startswith("__"):
             #     data[attr] = value
-        print(data)
+        print(getCurrTime(), data)
         with open('result.yml', 'w') as yamlFile:
             yaml.dump(data, yamlFile, default_flow_style=False)
 
@@ -104,10 +130,19 @@ class ProcessConverter():
             line + ',' if line.strip().endswith('"') else line for line in processStdout.split('\n'))
 
         ec2List = ast.literal_eval(processStdout)
+        print(ec2List)
         return ec2List
 
     def cvtToEBSList(self):
         return self.cvtToEC2List()
+
+
+def getCurrTime():
+    from datetime import datetime
+
+    # Get the current time and format it
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+    return current_time
 
 
 if __name__ == '__main__':
@@ -115,43 +150,99 @@ if __name__ == '__main__':
     osType = platform.system()
     initDirectory = getWorkPath()
 
-    targetList = ['ec2', 'ebs']
+    terraformList = ['ec2', 'ebs', 's3', 'eip', 'elb', 'rds', 'ec2-keypair']
+    # terraformList = ['s3', 'eip', 'elb', 'rds', 'ec2-keypair'] ### RESTRICT! ###
+    awsCliList = ['s3', 'eip', 'elb', 'rds', 'ec2-keypair']
+
     commandPrcsResult = getRegionByCLI()
     cvtRegionList = cvtRegionToList(commandPrcsResult=commandPrcsResult)
-    # cvtRegionList = ['ap-northeast-2']
+    cvtRegionList = ['us-east-1', 'ap-northeast-2']  # RESTRICT! ###
 
     resultWriter = ResultWriter(cvtRegionList)
 
-    for target in targetList:
+    for target in terraformList:
 
         directory = getTargetPath(workPath=initDirectory, tarPath=target)
         for cvtRegion in cvtRegionList:
-            print(target, cvtRegion, directory)
 
-            applyCommand = f'terraform apply -var "region_name={cvtRegion}" --auto-approve'
-            applyCommand += ' > NUL' if osType == 'Windows' else '1> /dev/null'
-            outputCommand = ['terraform', 'output', 'instance_ids']
+            if target in awsCliList:
 
-            os.chdir(directory)
-            os.system(applyCommand)
+                if target == 's3':
+                    s3List = getS3List()
+                    for s3 in s3List:
+                        bucketRegion, bucketData = s3
+                        resultWriter.s3.appendId(
+                            region=bucketRegion,
+                            id=bucketData
+                        )
 
-            process = subprocess.run(
-                outputCommand,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
-            processConverter = ProcessConverter(process)
-            if target == 'ec2':
-                ec2IdList = processConverter.cvtToEC2List()
-                for ec2Id in ec2IdList:
-                    resultWriter.ec2.appendId(region=cvtRegion, id=ec2Id)
+                if target == 'eip':
+                    eipList = getEipList(cvtRegionList)
+                    for eip in eipList:
+                        bucketRegion, bucketData = eip
+                        resultWriter.eip.appendId(
+                            region=bucketRegion,
+                            id=bucketData
+                        )
 
-            if target == 'ebs':
-                ebsIdList = processConverter.cvtToEBSList()
-                for ebsId in ebsIdList:
-                    resultWriter.ebs.appendId(region=cvtRegion, id=ebsId)
-
+                if target == 'elb':
+                    clbList = getClbList(cvtRegionList)
+                    elbList = getElbList(cvtRegionList)
+                    for clb in clbList:
+                        bucketRegion, bucketData = clb
+                        resultWriter.clb.appendId(
+                            region=bucketRegion,
+                            id=bucketData
+                        )
+                    for elb in elbList:
+                        bucketRegion, bucketData = elb
+                        resultWriter.elb.appendId(
+                            region=bucketRegion,
+                            id=bucketData
+                        )
+                if target == 'rds':
+                    rdsList = getRdsList(cvtRegionList)
+                    for rds in rdsList:
+                        bucketRegion, bucketData = rds
+                        resultWriter.rds.appendId(
+                            region=bucketRegion,
+                            id=bucketData
+                        )
+                if target == 'ec2-keypair':
+                    ec2KeyPairList = getEc2KeyPairList(cvtRegionList)
+                    for ec2KeyPair in ec2KeyPairList:
+                        bucketRegion, data = ec2KeyPair
+                        resultWriter.ec2_keypair.appendId(
+                            region=bucketRegion,
+                            id=data
+                        )
             else:
-                ec2IdList = []
+
+                applyCommand = f'terraform apply -var "region_name={cvtRegion}" --auto-approve'
+                applyCommand += ' > NUL' if osType == 'Windows' else '1> /dev/null'
+                outputCommand = ['terraform', 'output', 'instance_ids']
+
+                os.chdir(directory)
+                os.system(applyCommand)
+
+                process = subprocess.run(
+                    outputCommand,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
+                )
+                processConverter = ProcessConverter(process)
+                if target == 'ec2':
+                    ec2IdList = processConverter.cvtToEC2List()
+                    for ec2Id in ec2IdList:
+                        resultWriter.ec2.appendId(region=cvtRegion, id=ec2Id)
+
+                if target == 'ebs':
+                    ebsIdList = processConverter.cvtToEBSList()
+                    for ebsId in ebsIdList:
+                        resultWriter.ebs.appendId(region=cvtRegion, id=ebsId)
+
+                else:
+                    ec2IdList = []
+
     os.chdir(initDirectory)
     resultWriter.saveResult()
