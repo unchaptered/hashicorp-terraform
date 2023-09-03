@@ -13,6 +13,10 @@
 .settings/
 *.sublime-workspace
 
+__pycache__
+__pycache__/*
+*/__pycache__/*
+
 # IDE - VSCode
 .vscode/*
 !.vscode/settings.json
@@ -28,6 +32,8 @@
 *.pem
 
 # TERRAFORM
+
+result.yml
 
 .terraform
 .terraform.lock.hcl
